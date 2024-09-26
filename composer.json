@@ -3,9 +3,9 @@
     "description": "whoops integration for scrawler",
     "type": "library",
     "autoload": {
-        "psr-4": {
-            "Scrawler\\Exception\\": "src/"
-        }
+        "files": [
+            "src/functions.php"
+        ]
     },
     "authors": [
         {

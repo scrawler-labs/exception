@@ -1,0 +1,19 @@
+{
+    "name": "scrawler/exception",
+    "description": "whoops integration for scrawler",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Scrawler\\Exception\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ipranjal",
+            "email": "pranjaltech10@gmail.com"
+        }
+    ],
+    "require": {
+        "filp/whoops": "^2.16"
+    }
+}

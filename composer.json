@@ -2,6 +2,7 @@
     "name": "scrawler/exception",
     "description": "whoops integration for scrawler",
     "type": "library",
+    "license": "MIT",
     "autoload": {
         "files": [
             "src/functions.php"

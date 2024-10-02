@@ -1,7 +1,7 @@
 <?php
 
-if(class_exists(\Scrawler\App)){
-    \Scrawler\App::engine()->registerHandler('exception', function($e){
+if(class_exists(\Scrawler\App::class) && function_exists('app')){
+    app()->registerHandler('exception', function($e){
             $whoops = new \Whoops\Run;
             $whoops->allowQuit(false);
             $whoops->writeToOutput(false);
@@ -10,7 +10,11 @@ if(class_exists(\Scrawler\App)){
             }else{
                 $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
             }
-            return $whoops->handleException($e);
+            $output = $whoops->handleException($e);
+            app()->response()->setStatusCode(500);
+            app()->response()->setContent($output);
+            app()->response()->send();
+            
     });
 }else{
     $whoops = new \Whoops\Run;

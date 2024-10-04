@@ -1,19 +1,24 @@
 <?php
 
 if(class_exists(\Scrawler\App::class) && function_exists('app')){
-    app()->registerHandler('exception', function($e){
+    \Scrawler\App::engine()->handler('exception', function($e){
             $whoops = new \Whoops\Run;
             $whoops->allowQuit(false);
             $whoops->writeToOutput(false);
-            if(\Scrawler\App::engine()->config()->has('api') && \Scrawler\App::engine()->config()->get('api')){
+            if(\Scrawler\App::engine()->config()->get('api',false)){
                 $whoops->pushHandler(new \Whoops\Handler\JsonResponseHandler);
             }else{
                 $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
             }
-            $output = $whoops->handleException($e);
-            app()->response()->setStatusCode(500);
-            app()->response()->setContent($output);
-            app()->response()->send();
+            if(\Scrawler\App::engine()->config()->get('debug',false)){
+              
+                $output = \Scrawler\App::engine()->call(\Scrawler\App::engine()->getHandler('500'));
+            }else{
+                $output = $whoops->handleException($e);
+            }
+            \Scrawler\App::engine()->response()->setStatusCode(500);
+            \Scrawler\App::engine()->response()->setContent($output);
+            \Scrawler\App::engine()->response()->send();
             
     });
 }else{

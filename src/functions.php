@@ -1,30 +1,39 @@
 <?php
+/*
+ * This file is part of the Scrawler package.
+ *
+ * (c) Pranjal Pandey <its.pranjalpandey@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+use Scrawler\App;
 
-if(class_exists(\Scrawler\App::class) && function_exists('app')){
-    \Scrawler\App::engine()->handler('exception', function($e){
-            $whoops = new \Whoops\Run;
-            $whoops->allowQuit(false);
-            $whoops->writeToOutput(false);
-            if(\Scrawler\App::engine()->config()->get('api',false)){
-                $whoops->pushHandler(new \Whoops\Handler\JsonResponseHandler);
-            }else{
-                $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-            }
-            if(\Scrawler\App::engine()->config()->get('debug',false)){
-              
-                $output = \Scrawler\App::engine()->call(\Scrawler\App::engine()->getHandler('500'));
-            }else{
-                $output = $whoops->handleException($e);
-            }
-            \Scrawler\App::engine()->response()->setStatusCode(500);
-            \Scrawler\App::engine()->response()->setContent($output);
-            \Scrawler\App::engine()->response()->send();
-            
+if (class_exists(App::class) && function_exists('app')) {
+    App::engine()->handler('exception', function ($e) {
+        $whoops = new Whoops\Run();
+        $whoops->allowQuit(false);
+        $whoops->writeToOutput(false);
+        if (App::engine()->config()->get('api', false)) {
+            $whoops->pushHandler(new Whoops\Handler\JsonResponseHandler());
+        } else {
+            $pretty = new Whoops\Handler\PrettyPageHandler();
+            $pretty->addDataTable('Scrawler', [
+                'Version' => App::engine()->version(),
+            ]);
+            $whoops->pushHandler($pretty);
+        }
+        if (App::engine()->config()->get('debug', false)) {
+            $output = App::engine()->call(App::engine()->getHandler('500'));
+        } else {
+            $output = $whoops->handleException($e);
+        }
+        App::engine()->response()->setStatusCode(500);
+        App::engine()->response()->setContent($output);
+        App::engine()->response()->send();
     });
-}else{
-    $whoops = new \Whoops\Run;
-    $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+} else {
+    $whoops = new Whoops\Run();
+    $whoops->pushHandler(new Whoops\Handler\PrettyPageHandler());
     $whoops->register();
 }
-
-

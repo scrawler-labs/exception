@@ -19,7 +19,7 @@ if (class_exists(App::class) && function_exists('app')) {
         } else {
             $pretty = new Whoops\Handler\PrettyPageHandler();
             $pretty->addDataTable('Scrawler', [
-                'Version' => App::engine()->version(),
+                'Version' => App::engine()->getVersion(),
             ]);
             $whoops->pushHandler($pretty);
         }

@@ -24,9 +24,9 @@ if (class_exists(App::class) && function_exists('app')) {
             $whoops->pushHandler($pretty);
         }
         if (App::engine()->config()->get('debug', false)) {
-            $output = App::engine()->call(App::engine()->getHandler('500'));
-        } else {
             $output = $whoops->handleException($e);
+        } else {
+            $output = App::engine()->call(App::engine()->getHandler('500'));
         }
         App::engine()->response()->setStatusCode(500);
         App::engine()->response()->setContent($output);
